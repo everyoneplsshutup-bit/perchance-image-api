@@ -29,7 +29,7 @@ import time
 import uuid
 from collections import defaultdict
 from pathlib import Path
-from urllib.parse import quote, urlparse
+from urllib.parse import quote
 
 import httpx
 from fastapi import FastAPI, HTTPException, Query, Request
@@ -195,20 +195,6 @@ def img_url(filename: str) -> str:
     return f"{PUBLIC_BASE}/img/{filename}" if PUBLIC_BASE else f"/img/{filename}"
 
 
-def build_proxy():
-    """Explicit proxy with auth passed separately. httpx mis-parses this VM's
-    credential-bearing proxy URL from the environment, so the client must
-    never read the env vars itself (trust_env=False below)."""
-    raw = os.environ.get("https_proxy") or os.environ.get("http_proxy") or ""
-    if not raw:
-        return None
-    u = urlparse(raw)
-    if not u.hostname:
-        return None
-    url = f"{u.scheme or 'http'}://{u.hostname}:{u.port or 3128}"
-    if u.username:
-        return httpx.Proxy(url, auth=(u.username, u.password or ""))
-    return url
 
 
 async def run_generation(prompt, style, count, resolution, seed, negative):
@@ -225,7 +211,7 @@ async def run_generation(prompt, style, count, resolution, seed, negative):
     out = []
     failed = None
     try:
-        async with httpx.AsyncClient(timeout=120.0, trust_env=False, proxy=build_proxy()) as client:
+        async with httpx.AsyncClient(timeout=120.0) as client:
             for idx in range(count):
                 if idx > 0:
                     await asyncio.sleep(12)
