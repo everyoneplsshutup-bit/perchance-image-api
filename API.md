@@ -3,7 +3,7 @@
 Give this file (or the live `/openapi.json`) to any agentic AI and it can call the API.
 
 ## Base URL
-`https://perchance-image-api.onrender.com` (if the deploy URL differs, use the live Render URL instead)
+https://perchance-image-api-2040e.containers.snapdeploy.app
 
 ## Auth
 None. Rate limit: 30 requests/min per IP on generation endpoints.
@@ -24,5 +24,5 @@ Every generation tries Perchance first; on any Perchance failure it falls back t
 ## Notes
 - `style` is applied as a prompt hint (the page's style templates are client-side).
 - Resolutions: Square `768x768`, Portrait `512x768`, Landscape `768x512`. `count` 1–16 (images generate sequentially, ~12s apart).
-- Image URLs in responses are absolute (PUBLIC_BASE is the live Render URL).
+- Image URLs in responses are absolute (PUBLIC_BASE is the live SnapDeploy URL).
 - Free hosting sleeps after 15 min idle — the first request after sleep takes ~1 min to wake, then responses are normal.
